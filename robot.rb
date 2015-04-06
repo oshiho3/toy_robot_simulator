@@ -1,12 +1,5 @@
 class Robot
 
-  FACING = [
-    {id: 1, dir: "north", move: lambda{@y = @y-1 if @world.valid?(@x, @y-1)} },
-    {id: 2, dir: "east", move: lambda{@x = @x+1 if @world.valid?(@x+1, @y)} },
-    {id: 3, dir: "south", move: lambda{@y = @y+1 if @world.valid?(@x, @y+1)} },
-    {id: 4, dir: "west", move: lambda{@x = @x-1 if @world.valid?(@x-1, @y)} },
-  ]
-
   def initialize(world)
     @world = world
   end
@@ -49,4 +42,14 @@ class Robot
   def method_missing(method_sym, *arguments, &block)
     return false
   end
+
+  private
+
+  FACING = [
+    {id: 1, dir: "north", move: lambda{@y = @y+1 if @world.valid?(@x, @y+1)} },
+    {id: 2, dir: "east", move: lambda{@x = @x+1 if @world.valid?(@x+1, @y)} },
+    {id: 3, dir: "south", move: lambda{@y = @y-1 if @world.valid?(@x, @y-1)} },
+    {id: 4, dir: "west", move: lambda{@x = @x-1 if @world.valid?(@x-1, @y)} },
+  ]
+
 end
