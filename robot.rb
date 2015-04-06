@@ -35,7 +35,7 @@ class Robot
 
   def report
     facing = FACING.select {|f| f[:id] == @facing_id}
-    puts "#{@x},#{@y},#{facing[0][:dir]}"
+    puts "#{@x},#{@y},#{facing[0][:dir].upcase}"
     return true
   end
 
