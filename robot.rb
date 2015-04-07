@@ -1,22 +1,33 @@
-require 'pry'
 class Robot
 
   def initialize(world)
     @world = world
   end
 
-  def place(x, y, direction)
-    x = x.to_i
-    y = y.to_i
-    facing = FACING.find {|f| f[:dir] == direction}
-    if @world.valid?(x, y) && facing
-      @x = x
-      @y = y
-      @facing_id = facing[:id]
-    else
-      puts "Invalid PLACE command format. (eg.'PLACE 1,2,NORTH')"
+  def place(*arg)
+    message = nil
+    if 3 != arg.size
+      return true, "Wrong number of arguments for PLACE command. (Valid example is'PLACE 1,2,NORTH')"
     end
-    return true
+
+    x = arg[0].to_i
+    y = arg[1].to_i
+
+    unless @world.valid?(x, y)
+      minx, miny, maxx, maxy = @world.valid_range?
+      return true, "Invalid position. Please enter the range x:#{minx}-#{maxx}, y:#{miny}-#{maxy}"
+    end
+
+      facing = FACING.find {|f| f[:dir] == arg[2]}
+
+    unless facing
+      return true, "Invalid direction. Please enter direction from #{FACING.map{|a| a[:dir].upcase}}"
+    end
+  
+    @x = x
+    @y = y
+    @facing_id = facing[:id]
+    return true, message
   end
 
   def right
@@ -37,9 +48,9 @@ class Robot
   def report
     if placed?
       facing_temp = facing
-      puts "#{@x},#{@y},#{facing[:dir].upcase}"
+      output "#{@x},#{@y},#{facing[:dir].upcase}"
     else
-      puts "Unplaced"
+      output "Unplaced"
     end
     return true
   end
@@ -53,6 +64,10 @@ class Robot
   end
 
   private
+
+  def output(str)
+    puts str
+  end
 
   def placed?
     defined? @x

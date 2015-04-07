@@ -5,8 +5,14 @@ require_relative 'robot'
 world = World.new
 robot = Robot.new(world)
 
-print "Enter a command (PLACE, MOVE, LEFT, RIGHT or REPORT): "
-$stdout.flush
+def prompt_input
+  if ARGF.file.class==IO
+    print "Enter a command (PLACE, MOVE, LEFT, RIGHT or REPORT): "
+    $stdout.flush
+  end
+end
+
+prompt_input
 
 ARGF.each do |line|
   array = line.downcase.chomp.split(' ')
@@ -16,10 +22,16 @@ ARGF.each do |line|
     end
 
     break if command=='exit'
-    if false == robot.send(command.downcase, *options)
+
+    result, message = robot.send(command.downcase, *options)
+    if result==false
       puts "Invalid command."
     end
-    print "Enter a command (PLACE, MOVE, LEFT, RIGHT or REPORT): "
-    $stdout.flush
+    if message
+      puts message
+    end
+    prompt_input
   end
 end
+
+

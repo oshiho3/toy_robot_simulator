@@ -5,31 +5,54 @@ describe "Robot" do
     @robot = Robot.new(@world)
   end
 
-  it "scenario 1" do
+  it "example a" do
     @robot.place(0,0,"north")
     @robot.move
-    expect { @robot.report }.to output(/0,1,NORTH/).to_stdout
+    @robot.should_receive(:output).with("0,1,NORTH")
+    @robot.report
   end
 
-  it "scenario 2" do
+  it "example b" do
     @robot.place(0,0,"north")
     @robot.left
-    expect { @robot.report }.to output(/0,0,WEST/).to_stdout
+    @robot.should_receive(:output).with("0,0,WEST")
+    @robot.report
   end
 
-  it "scenario 3" do
+  it "example c" do
     @robot.place(1,2,"east")
     @robot.move
     @robot.move
     @robot.left
     @robot.move
-    expect { @robot.report }.to output(/3,3,NORTH/).to_stdout
+    @robot.should_receive(:output).with("3,3,NORTH")
+    @robot.report
   end
 
-  it "unplaced robot" do
-    @robot.left
-    @robot.right
-    @robot.move
-    expect { @robot.report }.to output(/Unplaced/).to_stdout
+  context "place" do
+
+    it "Wrong number of arguments" do
+      result, message = @robot.place(10)
+      expect(result).to eq(true)
+      expect(message).to match(/Wrong number of arguments/)
+    end
+
+    it "Invalid position" do
+      result, message = @robot.place(10,22,"east")
+      expect(result).to eq(true)
+      expect(message).to match(/Invalid position/)
+    end
+
+    it "Invalid direction" do
+      result, message = @robot.place(1,2,"north-east")
+      expect(result).to eq(true)
+      expect(message).to match(/Invalid direction/)
+    end
   end
+
+  it "report for unplaced robot" do
+    @robot.should_receive(:output).with("Unplaced")
+    @robot.report
+  end
+
 end
