@@ -9,13 +9,13 @@ print "Enter a command (PLACE, MOVE, LEFT, RIGHT or REPORT): "
 $stdout.flush
 
 ARGF.each do |line|
-  array = line.chomp.split(' ')
+  array = line.downcase.chomp.split(' ')
   if command = array[0]
     if array[1]
       options = array[1].split(',')
     end
 
-    break if line.chomp=='exit'
+    break if command=='exit'
     if false == robot.send(command.downcase, *options)
       puts "Invalid command."
     end

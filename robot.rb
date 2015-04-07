@@ -1,3 +1,4 @@
+require 'pry'
 class Robot
 
   def initialize(world)
@@ -5,37 +6,41 @@ class Robot
   end
 
   def place(x, y, direction)
-    @x = x.to_i
-    @y = y.to_i
-    facing = FACING.select {|f| f[:dir] == direction.downcase}
-    if facing.size > 0
-      @facing_id = facing[0][:id]
+    x = x.to_i
+    y = y.to_i
+    facing = FACING.find {|f| f[:dir] == direction}
+    if @world.valid?(x, y) && facing
+      @x = x
+      @y = y
+      @facing_id = facing[:id]
     else
-      puts "no such direction"
+      puts "Invalid PLACE command format. (eg.'PLACE 1,2,NORTH')"
     end
     return true
   end
 
   def right
-    @facing_id = @facing_id==FACING.size ? 1 : @facing_id + 1
+    @facing_id = (@facing_id==FACING.size) ? 1 : @facing_id + 1 if placed?
     return true
   end
 
   def left
-    @facing_id = @facing_id==1 ? FACING.size : @facing_id - 1
+    @facing_id = (@facing_id==1) ? FACING.size : @facing_id - 1 if placed?
     return true
   end
 
   def move
-    facing = FACING.select {|f| f[:id] == @facing_id}
-    move_lambda = facing[0][:move]
-    instance_exec(&move_lambda)
+    instance_exec(&facing[:move]) if placed?
     return true
   end
 
   def report
-    facing = FACING.select {|f| f[:id] == @facing_id}
-    puts "#{@x},#{@y},#{facing[0][:dir].upcase}"
+    if placed?
+      facing_temp = facing
+      puts "#{@x},#{@y},#{facing[:dir].upcase}"
+    else
+      puts "Unplaced"
+    end
     return true
   end
 
@@ -43,7 +48,15 @@ class Robot
     return false
   end
 
+  def facing
+    FACING.find {|f| f[:id] == @facing_id}
+  end
+
   private
+
+  def placed?
+    defined? @x
+  end
 
   FACING = [
     {id: 1, dir: "north", move: lambda{@y = @y+1 if @world.valid?(@x, @y+1)} },
@@ -51,5 +64,4 @@ class Robot
     {id: 3, dir: "south", move: lambda{@y = @y-1 if @world.valid?(@x, @y-1)} },
     {id: 4, dir: "west", move: lambda{@x = @x-1 if @world.valid?(@x-1, @y)} },
   ]
-
 end
