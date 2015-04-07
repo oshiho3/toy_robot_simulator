@@ -21,15 +21,18 @@ ARGF.each do |line|
       options = array[1].split(',')
     end
 
-    break if command=='exit'
-
-    result, message = robot.send(command.downcase, *options)
-    if result==false
+    case command
+    when "place"
+      result, message = robot.place(*options)
+    when "move", "right", "left", "report"
+      result, message = robot.send(command.downcase, *options)
+    when "exit"
+      break
+    else
       puts "Invalid command."
     end
-    if message
-      puts message
-    end
+
+    puts message if message
     prompt_input
   end
 end
