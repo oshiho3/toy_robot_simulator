@@ -18,8 +18,7 @@ class Robot
       return true, "Invalid position. Please enter the range x:#{minx}-#{maxx}, y:#{miny}-#{maxy}"
     end
 
-      facing = FACING.find {|f| f[:dir] == arg[2]}
-
+    facing = FACING.find {|f| f[:dir] == arg[2]}
     unless facing
       return true, "Invalid direction. Please enter direction from #{FACING.map{|a| a[:dir].upcase}}"
     end
@@ -53,10 +52,6 @@ class Robot
       output "Unplaced"
     end
     return true
-  end
-
-  def method_missing(method_sym, *arguments, &block)
-    return false
   end
 
   def facing
