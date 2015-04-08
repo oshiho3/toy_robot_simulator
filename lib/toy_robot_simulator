@@ -1,13 +1,11 @@
 #!/usr/bin/env ruby
-require_relative 'world'
-require_relative 'robot'
+require_relative 'game'
 
-world = World.new
-robot = Robot.new(world)
+@game = Game.new
 
 def prompt_input
   if ARGF.file.class==IO
-    print "Enter a command (PLACE, MOVE, LEFT, RIGHT or REPORT): "
+    print @game.get_prompt_string
     $stdout.flush
   end
 end
@@ -15,26 +13,10 @@ end
 prompt_input
 
 ARGF.each do |line|
-  array = line.downcase.chomp.split(' ')
-  if command = array[0]
-    if array[1]
-      options = array[1].split(',')
-    end
-
-    case command
-    when "place"
-      result, message = robot.place(*options)
-    when "move", "right", "left", "report"
-      result, message = robot.send(command.downcase, *options)
-    when "exit"
-      break
-    else
-      puts "Invalid command."
-    end
-
-    puts message if message
-    prompt_input
+  unless @game.execute_command(line)
+    break
   end
+  prompt_input
 end
 
 

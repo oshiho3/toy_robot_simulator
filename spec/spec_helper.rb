@@ -90,5 +90,6 @@ RSpec.configure do |config|
 =end
 end
 
+require_relative '../lib/game'
 require_relative '../lib/world'
 require_relative '../lib/robot'
