@@ -7,10 +7,10 @@ Command line applicaction of a toy robot moving on a square tabletop.
 * The robot is free to roam around the surface of the table, but must be prevented from falling to destruction. Any movement  that would result in the robot falling from the table must be prevented, however further valid movement commands must still be allowed.
 
 = How to run the application
-You can run it as a command prompt application as:<br>
+You can run it as a command prompt application as:
 <code>$ bin/toy_robot_simulator</code>
 
-or run specify a file that contains commands as text strings<br>
+or run specify a file that contains commands as text strings
 <code>$ bin/toy_robot_simulator command.txt</code>
 
 = Commands
